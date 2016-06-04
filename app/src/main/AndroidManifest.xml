@@ -14,7 +14,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:name="com.chensen.Application.MyApplication">
-        <activity android:name=".MainActivity">
+        <activity android:name=".MainActivity"
+            android:logo="@drawable/ic_city">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

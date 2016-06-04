@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">EafreyWeather</string>
+
+    <string name="index_comf">舒适度</string>
+    <string name="index_car_wash">洗车指数</string>
+    <string name="index_dress">穿衣指数</string>
+    <string name="index_flu">感冒指数</string>
+    <string name="index_sport">运动指数</string>
+    <string name="index_trav">旅游指数</string>
+    <string name="index_uv">紫外线指数</string>
+
 </resources>

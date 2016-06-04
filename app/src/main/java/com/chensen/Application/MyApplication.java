@@ -1,8 +1,12 @@
 package com.chensen.Application;
 
 import android.app.Application;
+import android.util.Log;
 
+import com.baidu.apistore.sdk.ApiCallBack;
 import com.baidu.apistore.sdk.ApiStoreSDK;
+import com.baidu.apistore.sdk.network.Parameters;
+import com.chensen.eafreyweather.MainActivity;
 import com.chensen.information.AQIData;
 import com.chensen.information.AlarmInfo;
 import com.chensen.information.BasicInfo;
@@ -10,6 +14,7 @@ import com.chensen.information.Suggestion;
 import com.chensen.information.DailyForecastInfo;
 import com.chensen.information.HourlyForecastInfo;
 import com.chensen.information.NowWeathInfo;
+import com.chensen.util.JSON2Java;
 
 /**
  * Created by 陈森 on 2016/5/31.
@@ -94,6 +99,25 @@ public class MyApplication extends Application {
     public void onCreate() {
         //初始化部分
         ApiStoreSDK.init(this, "55d00e1b496a6ea15e3fe4edaf42b392");
+
+        Parameters para = new Parameters();
+        para.put("city", "xian");
+        /*ApiStoreSDK.execute("http://apis.baidu.com/heweather/weather/free",
+                ApiStoreSDK.GET,
+                para,
+                new ApiCallBack() {
+
+                    @Override
+                    public void onSuccess(int status, String responseString) {
+                        Log.i("loadData", "onSuccess");
+
+                        JSON2Java.JSON2Java(MainActivity.app, responseString);
+
+
+                        //mTextView.setText(responseString);
+                    }
+
+                });*/
         super.onCreate();
     }
 }
