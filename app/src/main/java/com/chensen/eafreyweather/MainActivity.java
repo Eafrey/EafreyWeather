@@ -79,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
         sugs[3] = "感冒指数:";
         sugs[4] = "运动指数:";
         sugs[5] = "旅游指数:";
-        sugs[6] = "紫外线指数";
+        sugs[6] = "紫外线指数:";
 
         icons = new int[]{R.drawable.ic_sunny, R.drawable.ic_sunny, R.drawable.ic_sunny, R.drawable.ic_sunny
                 , R.drawable.ic_sunny, R.drawable.ic_sunny, R.drawable.ic_sunny};
