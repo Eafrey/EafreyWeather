@@ -4,44 +4,59 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:background="#2000FF00">
+    android:background="@drawable/cover_default_img">
 
-    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:showIn="@layout/activity_main"
-        android:scrollbars="none"
-        tools:context=".MainActivity">
+        android:layout_height="match_parent">
 
-        <LinearLayout
+        <android.support.v7.widget.Toolbar
+            android:background="@color/zhihu_blue"
+            android:id="@+id/id_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"></android.support.v7.widget.Toolbar>
+
+        <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:gravity="center"
-            android:orientation="vertical"
-            tools:context="com.wf.myndkdemo.MainActivity" >
+            tools:showIn="@layout/activity_main"
+            android:scrollbars="none"
+            tools:context=".MainActivity">
 
-            <com.chensen.widget.MyGridView
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:numColumns="2"
-                android:horizontalSpacing="1dp"
-                android:verticalSpacing="1dp"
-                android:id="@+id/sug_grid_view">
+                android:gravity="center"
+                android:orientation="vertical"
+                tools:context="com.wf.myndkdemo.MainActivity" >
 
-            </com.chensen.widget.MyGridView>
+                <com.chensen.widget.MyGridView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:numColumns="2"
+                    android:horizontalSpacing="1dp"
+                    android:verticalSpacing="1dp"
+                    android:id="@+id/sug_grid_view">
 
-            <TextView
-                android:id="@+id/mTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="20dip"
-                android:text="下拉刷新"
-                android:layout_gravity="center_horizontal"
-                android:gravity="center_horizontal"/>
+                </com.chensen.widget.MyGridView>
 
-        </LinearLayout>
+                <TextView
+                    android:id="@+id/mTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="20dip"
+                    android:text="下拉刷新"
+                    android:layout_gravity="center_horizontal"
+                    android:gravity="center_horizontal"/>
 
-    </ScrollView>
+            </LinearLayout>
+
+        </ScrollView>
+
+
+    </LinearLayout>
+
 
 </android.support.v4.widget.SwipeRefreshLayout>

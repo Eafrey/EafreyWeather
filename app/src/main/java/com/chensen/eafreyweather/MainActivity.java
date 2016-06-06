@@ -5,6 +5,8 @@ import android.graphics.Color;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.*;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -41,6 +43,8 @@ public class MainActivity extends AppCompatActivity {
     List<Map<String, Object>> mDataLists;
     private final static int SUG_NUM = 7;
 
+    private android.support.v7.widget.Toolbar mToolbar;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,10 +58,24 @@ public class MainActivity extends AppCompatActivity {
     private void initUI() {
         mTextView = (TextView) findViewById(R.id.mTextView);
 
+        if(app == null) {
+            app = (MyApplication) getApplication();
+        }
+
+        initToolbar();
+
         initSwipeRefreshLayout();
 
         initSugGridView();
 
+    }
+
+    private void initToolbar() {
+        mToolbar = (Toolbar) findViewById(R.id.id_toolbar);
+        mToolbar.setLogo(R.drawable.icon);
+        String city = app.getBasicInfo().getCity();
+        mToolbar.setTitle(city);
+        setSupportActionBar(mToolbar);
     }
 
     private void initSugGridView() {
@@ -126,9 +144,9 @@ public class MainActivity extends AppCompatActivity {
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                if(app == null) {
-                    app = (MyApplication) getApplication();
-                }
+                //if(app == null) {
+                  //  app = (MyApplication) getApplication();
+                //}
                 initData();
 
 
