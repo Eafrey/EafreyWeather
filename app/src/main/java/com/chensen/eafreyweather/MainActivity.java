@@ -1,6 +1,8 @@
 package com.chensen.eafreyweather;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -45,6 +47,8 @@ public class MainActivity extends AppCompatActivity {
 
     private android.support.v7.widget.Toolbar mToolbar;
 
+    private SharedPreferences weatherPref;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,13 +58,158 @@ public class MainActivity extends AppCompatActivity {
         initUI();
     }
 
+    private void updateWeaData() {
+        SharedPreferences preferences = getSharedPreferences("weather_info", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+
+        Method[] methods1 = app.getBasicInfo().getClass().getDeclaredMethods();
+        for(Method method : methods1) {
+            if(method.getName().startsWith("get")) {
+                try {
+                    String s = (String) method.invoke(app.getBasicInfo());
+                    String key = method.getName().substring(3, method.getName().length()).toLowerCase();
+
+                    editor.putString(key, s);
+                } catch (InvocationTargetException e) {
+                    e.printStackTrace();
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        Method[] methods2 = app.getAqiData().getClass().getDeclaredMethods();
+        for(Method method : methods2) {
+            if(method.getName().startsWith("get")) {
+                try {
+                    String s = (String) method.invoke(app.getAqiData());
+                    String key = method.getName().substring(3, method.getName().length()).toLowerCase();
+
+                    editor.putString(key, s);
+                } catch (InvocationTargetException e) {
+                    e.printStackTrace();
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        Method[] methods3 = app.getAlarmInfo().getClass().getDeclaredMethods();
+        for(Method method : methods3) {
+            if(method.getName().startsWith("get")) {
+                try {
+                    String s = (String) method.invoke(app.getAlarmInfo());
+                    String key = method.getName().substring(3, method.getName().length()).toLowerCase();
+
+                    editor.putString(key, s);
+                } catch (InvocationTargetException e) {
+                    e.printStackTrace();
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        Method[] methods4 = app.getNowWeathInfo().getClass().getDeclaredMethods();
+        for(Method method : methods4) {
+            if(method.getName().startsWith("get")) {
+                try {
+                    String s = (String) method.invoke(app.getNowWeathInfo());
+                    String key = method.getName().substring(3, method.getName().length()).toLowerCase();
+
+                    editor.putString(key, s);
+                } catch (InvocationTargetException e) {
+                    e.printStackTrace();
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        DailyForecastInfo[] forecast7Day = app.getForecast7Day();
+        for(int i=0; i<forecast7Day.length && forecast7Day[i] != null; i++) {
+            Method[] methods = forecast7Day[i].getClass().getDeclaredMethods();
+            for(Method method : methods) {
+                if(method.getName().startsWith("get")) {
+                    try {
+                        String s = (String) method.invoke(app.getForecast7Day()[i]);
+                        String key = method.getName().substring(3, method.getName().length()).toLowerCase() + i;
+
+                        editor.putString(key, s);
+                    } catch (InvocationTargetException e) {
+                        e.printStackTrace();
+                    } catch (IllegalAccessException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+        HourlyForecastInfo[] forecastHour = app.getForecastHour();
+        for(int i=0; i<forecastHour.length && forecastHour[i] != null; i++) {
+            Method[] methods = forecastHour[i].getClass().getDeclaredMethods();
+            for(Method method : methods) {
+                if(method.getName().startsWith("get")) {
+                    try {
+                        String s = (String) method.invoke(app.getForecastHour()[i]);
+                        String key = method.getName().substring(3, method.getName().length()).toLowerCase() + i;
+
+                        editor.putString(key, s);
+                    } catch (InvocationTargetException e) {
+                        e.printStackTrace();
+                    } catch (IllegalAccessException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+
+        Method[] methods5 = app.getBrfSuggestion().getClass().getDeclaredMethods();
+        for(Method method : methods5) {
+            if(method.getName().startsWith("get")) {
+                try {
+                    String s = (String) method.invoke(app.getBrfSuggestion());
+                    String key = method.getName().substring(3, method.getName().length()).toLowerCase() + "brf";
+
+                    editor.putString(key, s);
+                } catch (InvocationTargetException e) {
+                    e.printStackTrace();
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        Method[] methods6 = app.getDetailedSuggestion().getClass().getDeclaredMethods();
+        for(Method method : methods6) {
+            if(method.getName().startsWith("get")) {
+                try {
+                    String s = (String) method.invoke(app.getDetailedSuggestion());
+                    String key = method.getName().substring(3, method.getName().length()).toLowerCase() + "det";
+
+                    editor.putString(key, s);
+                } catch (InvocationTargetException e) {
+                    e.printStackTrace();
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        editor.commit();
+    }
+
 
     private void initUI() {
-        mTextView = (TextView) findViewById(R.id.mTextView);
-
         if(app == null) {
             app = (MyApplication) getApplication();
         }
+
+        mTextView = (TextView) findViewById(R.id.mTextView);
+
+        mToolbar = (Toolbar) findViewById(R.id.id_toolbar);
+        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
+        mSugGridView = (MyGridView) findViewById(R.id.sug_grid_view);
+        weatherPref = getSharedPreferences("weather_info", Context.MODE_PRIVATE);
 
         initToolbar();
 
@@ -71,7 +220,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initToolbar() {
-        mToolbar = (Toolbar) findViewById(R.id.id_toolbar);
         mToolbar.setLogo(R.drawable.icon);
         String city = app.getBasicInfo().getCity();
         mToolbar.setTitle(city);
@@ -79,25 +227,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initSugGridView() {
-        mSugGridView = (MyGridView) findViewById(R.id.sug_grid_view);
 
         sugs = new String[7];
 
-        /*Suggestion brfSug = app.getBrfSuggestion();
-        sugs[0] =  "舒适度:" + brfSug.getComf();
-        sugs[1] = "洗车指数:" + brfSug.getCw();
-        sugs[2] = "穿衣指数:" + brfSug.getDrsg();
-        sugs[3] = "感冒指数:" + brfSug.getFlu();
-        sugs[4] = "运动指数:" + brfSug.getSport();
-        sugs[5] = "旅游指数:" + brfSug.getTrav();
-        sugs[6] = "紫外线指数:" + brfSug.getUv();*/
-        sugs[0] =  "舒适度:" ;
-        sugs[1] = "洗车指数:";
-        sugs[2] = "穿衣指数:";
-        sugs[3] = "感冒指数:";
-        sugs[4] = "运动指数:";
-        sugs[5] = "旅游指数:";
-        sugs[6] = "紫外线指数:";
+        sugs[0] =  "舒适度:" + weatherPref.getString("comfbrf", null);
+        sugs[1] = "洗车指数:" + weatherPref.getString("cwbrf", null);
+        sugs[2] = "穿衣指数:"+ weatherPref.getString("drsgbrf", null);
+        sugs[3] = "感冒指数:"+ weatherPref.getString("flubrf", null);
+        sugs[4] = "运动指数:"+ weatherPref.getString("sportbrf", null);
+        sugs[5] = "旅游指数:"+ weatherPref.getString("travbrf", null);
+        sugs[6] = "紫外线指数:"+ weatherPref.getString("uvbrf", null);
 
         icons = new int[]{R.drawable.ic_sunny, R.drawable.ic_sunny, R.drawable.ic_sunny, R.drawable.ic_sunny
                 , R.drawable.ic_sunny, R.drawable.ic_sunny, R.drawable.ic_sunny};
@@ -139,7 +278,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void  initSwipeRefreshLayout() {
-        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
         mSwipeRefreshLayout.setColorSchemeColors(Color.BLUE);
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -149,10 +287,8 @@ public class MainActivity extends AppCompatActivity {
                 //}
                 initData();
 
-
                 updateSugInfo();
-                //sugs[0] = "sb";
-                //mDataLists.get(0).put("text", sugs[0]);
+
                 SimpleAdapter sa = (SimpleAdapter) mSugGridView.getAdapter();
                 sa.notifyDataSetChanged();
                 //mSugGridView.invalidateViews();上一句或者这一句都可以更新
@@ -178,6 +314,7 @@ public class MainActivity extends AppCompatActivity {
 
                         String s = new String(testToView(app));
                         mTextView.setText(s);
+                        updateWeaData();
                         //mTextView.setText(responseString);
                     }
 
@@ -377,7 +514,7 @@ public class MainActivity extends AppCompatActivity {
                     public void onError(int status, String responseString, Exception e) {
                         Log.i("loadData", "onError, status: " + status);
                         Log.i("loadData", "errMsg: " + (e == null ? "" : e.getMessage()));
-                        mTextView.setText("连接不到网络");
+                        mTextView.setText("连接不到网络...");
                     }
                 });
 

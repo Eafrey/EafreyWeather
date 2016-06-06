@@ -1,6 +1,8 @@
 package com.chensen.Application;
 
 import android.app.Application;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
 
 import com.baidu.apistore.sdk.ApiCallBack;
@@ -15,6 +17,9 @@ import com.chensen.information.DailyForecastInfo;
 import com.chensen.information.HourlyForecastInfo;
 import com.chensen.information.NowWeathInfo;
 import com.chensen.util.JSON2Java;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 /**
  * Created by 陈森 on 2016/5/31.
@@ -100,9 +105,156 @@ public class MyApplication extends Application {
         //初始化部分
         ApiStoreSDK.init(this, "55d00e1b496a6ea15e3fe4edaf42b392");
 
+        initData();
+        //updateWeaData();
+
+        super.onCreate();
+    }
+
+    private void updateWeaData() {
+        SharedPreferences preferences = getSharedPreferences("weather_info", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+
+        Method[] methods1 = getBasicInfo().getClass().getDeclaredMethods();
+        for(Method method : methods1) {
+            if(method.getName().startsWith("get")) {
+                try {
+                    String s = (String) method.invoke(getBasicInfo());
+                    String key = method.getName().substring(3, method.getName().length()).toLowerCase();
+
+                    editor.putString(key, s);
+                } catch (InvocationTargetException e) {
+                    e.printStackTrace();
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        Method[] methods2 = getAqiData().getClass().getDeclaredMethods();
+        for(Method method : methods2) {
+            if(method.getName().startsWith("get")) {
+                try {
+                    String s = (String) method.invoke(getAqiData());
+                    String key = method.getName().substring(3, method.getName().length()).toLowerCase();
+
+                    editor.putString(key, s);
+                } catch (InvocationTargetException e) {
+                    e.printStackTrace();
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        Method[] methods3 = getAlarmInfo().getClass().getDeclaredMethods();
+        for(Method method : methods3) {
+            if(method.getName().startsWith("get")) {
+                try {
+                    String s = (String) method.invoke(getAlarmInfo());
+                    String key = method.getName().substring(3, method.getName().length()).toLowerCase();
+
+                    editor.putString(key, s);
+                } catch (InvocationTargetException e) {
+                    e.printStackTrace();
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        Method[] methods4 = getNowWeathInfo().getClass().getDeclaredMethods();
+        for(Method method : methods4) {
+            if(method.getName().startsWith("get")) {
+                try {
+                    String s = (String) method.invoke(getNowWeathInfo());
+                    String key = method.getName().substring(3, method.getName().length()).toLowerCase();
+
+                    editor.putString(key, s);
+                } catch (InvocationTargetException e) {
+                    e.printStackTrace();
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        DailyForecastInfo[] forecast7Day = getForecast7Day();
+        for(int i=0; i<forecast7Day.length && forecast7Day[i] != null; i++) {
+            Method[] methods = forecast7Day[i].getClass().getDeclaredMethods();
+            for(Method method : methods) {
+                if(method.getName().startsWith("get")) {
+                    try {
+                        String s = (String) method.invoke(getForecast7Day()[i]);
+                        String key = method.getName().substring(3, method.getName().length()).toLowerCase() + i;
+
+                        editor.putString(key, s);
+                    } catch (InvocationTargetException e) {
+                        e.printStackTrace();
+                    } catch (IllegalAccessException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+        HourlyForecastInfo[] forecastHour = getForecastHour();
+        for(int i=0; i<forecastHour.length && forecastHour[i] != null; i++) {
+            Method[] methods = forecastHour[i].getClass().getDeclaredMethods();
+            for(Method method : methods) {
+                if(method.getName().startsWith("get")) {
+                    try {
+                        String s = (String) method.invoke(getForecastHour()[i]);
+                        String key = method.getName().substring(3, method.getName().length()).toLowerCase() + i;
+
+                        editor.putString(key, s);
+                    } catch (InvocationTargetException e) {
+                        e.printStackTrace();
+                    } catch (IllegalAccessException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+
+        Method[] methods5 = getBrfSuggestion().getClass().getDeclaredMethods();
+        for(Method method : methods5) {
+            if(method.getName().startsWith("get")) {
+                try {
+                    String s = (String) method.invoke(getBrfSuggestion());
+                    String key = method.getName().substring(3, method.getName().length()).toLowerCase() + "brf";
+
+                    editor.putString(key, s);
+                } catch (InvocationTargetException e) {
+                    e.printStackTrace();
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        Method[] methods6 = getDetailedSuggestion().getClass().getDeclaredMethods();
+        for(Method method : methods6) {
+            if(method.getName().startsWith("get")) {
+                try {
+                    String s = (String) method.invoke(getDetailedSuggestion());
+                    String key = method.getName().substring(3, method.getName().length()).toLowerCase() + "det";
+
+                    editor.putString(key, s);
+                } catch (InvocationTargetException e) {
+                    e.printStackTrace();
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        editor.commit();
+    }
+
+    private void initData() {
         Parameters para = new Parameters();
         para.put("city", "xian");
-        /*ApiStoreSDK.execute("http://apis.baidu.com/heweather/weather/free",
+        ApiStoreSDK.execute("http://apis.baidu.com/heweather/weather/free",
                 ApiStoreSDK.GET,
                 para,
                 new ApiCallBack() {
@@ -112,12 +264,20 @@ public class MyApplication extends Application {
                         Log.i("loadData", "onSuccess");
 
                         JSON2Java.JSON2Java(MainActivity.app, responseString);
-
-
-                        //mTextView.setText(responseString);
                     }
 
-                });*/
-        super.onCreate();
+                    @Override
+                    public void onComplete() {
+                        Log.i("loadData", "onComplete");
+                    }
+
+                    @Override
+                    public void onError(int status, String responseString, Exception e) {
+                        Log.i("loadData", "onError, status: " + status);
+                        Log.i("loadData", "errMsg: " + (e == null ? "" : e.getMessage()));
+                    }
+
+                });
+
     }
 }
