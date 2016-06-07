@@ -10,9 +10,11 @@ import android.os.Bundle;
 import android.support.v7.widget.*;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.widget.*;
 
 import com.baidu.apistore.sdk.ApiCallBack;
@@ -35,10 +37,13 @@ import java.util.Map;
 public class MainActivity extends AppCompatActivity {
     public static MyApplication app;
 
+    //仅作测试用的一个文本
     private TextView mTextView;
 
+    //官方用于实现下滑刷新的layout
     private SwipeRefreshLayout mSwipeRefreshLayout;
 
+    //GridView，里面包括各种建议
     private MyGridView mSugGridView;
     private String[] sugs;
     private int[] icons;
@@ -47,7 +52,13 @@ public class MainActivity extends AppCompatActivity {
 
     private android.support.v7.widget.Toolbar mToolbar;
 
+    //用于存储天气信息
     private SharedPreferences weatherPref;
+
+    //现在的温度，天气的图标表示，和温度范围
+    private TextView mTmpNow;
+    private ImageView mNowWeaIcon;
+    private TextView mTmpRange;
 
 
     @Override
@@ -58,6 +69,9 @@ public class MainActivity extends AppCompatActivity {
         initUI();
     }
 
+    /**
+     * 更新天气信息到SharedPreference
+     */
     private void updateWeaData() {
         SharedPreferences preferences = getSharedPreferences("weather_info", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
@@ -115,7 +129,7 @@ public class MainActivity extends AppCompatActivity {
             if(method.getName().startsWith("get")) {
                 try {
                     String s = (String) method.invoke(app.getNowWeathInfo());
-                    String key = method.getName().substring(3, method.getName().length()).toLowerCase();
+                    String key = method.getName().substring(3, method.getName().length()).toLowerCase() + "now";
 
                     editor.putString(key, s);
                 } catch (InvocationTargetException e) {
@@ -133,7 +147,7 @@ public class MainActivity extends AppCompatActivity {
                 if(method.getName().startsWith("get")) {
                     try {
                         String s = (String) method.invoke(app.getForecast7Day()[i]);
-                        String key = method.getName().substring(3, method.getName().length()).toLowerCase() + i;
+                        String key = method.getName().substring(3, method.getName().length()).toLowerCase() + "day" + i;
 
                         editor.putString(key, s);
                     } catch (InvocationTargetException e) {
@@ -151,7 +165,7 @@ public class MainActivity extends AppCompatActivity {
                 if(method.getName().startsWith("get")) {
                     try {
                         String s = (String) method.invoke(app.getForecastHour()[i]);
-                        String key = method.getName().substring(3, method.getName().length()).toLowerCase() + i;
+                        String key = method.getName().substring(3, method.getName().length()).toLowerCase() + "hour" + i;
 
                         editor.putString(key, s);
                     } catch (InvocationTargetException e) {
@@ -211,22 +225,54 @@ public class MainActivity extends AppCompatActivity {
         mSugGridView = (MyGridView) findViewById(R.id.sug_grid_view);
         weatherPref = getSharedPreferences("weather_info", Context.MODE_PRIVATE);
 
+
+        mTmpNow = (TextView) findViewById(R.id.id_tmp_now);
+        mTmpRange = (TextView) findViewById(R.id.id_now_tmp_range);
+        mNowWeaIcon = (ImageView) findViewById(R.id.id_icon_now_wea);
+
         initToolbar();
 
         initSwipeRefreshLayout();
 
-        initSugGridView();
+        updateSugGridView();
+        String [] from ={"image", "text"};
+        int [] to = {R.id.icon_sug_index, R.id.sug_txt};
+        mSugGridView.setAdapter(new SimpleAdapter(this, mDataLists, R.layout.sug_item, from, to));
 
+        updateNowWeather();
+
+    }
+
+    private void updateNowWeather() {
+        //获取并显示当前温度
+        String tmp = weatherPref.getString("tmp", "--") + "℃";
+        mTmpNow.setText(tmp);
+
+        //显示或更新当天天气情况的图标
+        String weaTxt = weatherPref.getString("txtnow", "--");
+        switch (weaTxt) {
+            case "多云":
+                mNowWeaIcon.setImageResource(R.drawable.a_28);
+                break;
+            default:
+                break;
+        }
+
+        //获取并显示当天天气情况和当天温度范围
+        String weaDatTxt = weatherPref.getString("txt_dday0", "--") + "转" + weatherPref.getString("txt_nday0", "--") + " ";
+        String tmpRange = weatherPref.getString("minday0", "--") + "~" + weatherPref.getString("maxday0", "--") + "℃";
+        String txt = weaDatTxt + tmpRange;
+        mTmpRange.setText(txt);
     }
 
     private void initToolbar() {
         mToolbar.setLogo(R.drawable.icon);
-        String city = app.getBasicInfo().getCity();
+        String city = weatherPref.getString("city", "city");
         mToolbar.setTitle(city);
         setSupportActionBar(mToolbar);
     }
 
-    private void initSugGridView() {
+    private void updateSugGridView() {
 
         sugs = new String[7];
 
@@ -249,33 +295,10 @@ public class MainActivity extends AppCompatActivity {
             mDataLists.add(map);
         }
 
-        String [] from ={"image", "text"};
-        int [] to = {R.id.icon_sug_index, R.id.sug_txt};
-        mSugGridView.setAdapter(new SimpleAdapter(this, mDataLists, R.layout.sug_item, from, to));
 
     }
 
-    private void updateSugInfo() {
-        /*if(app == null) {
-            app = (MyApplication) getApplication();
-        }*/
 
-        Suggestion brfSug = app.getBrfSuggestion();
-
-
-        sugs[0] =  "舒适度:" + brfSug.getComf();
-        sugs[1] = "洗车指数:" + brfSug.getCw();
-        sugs[2] = "穿衣指数:" + brfSug.getDrsg();
-        sugs[3] = "感冒指数:" + brfSug.getFlu();
-        sugs[4] = "运动指数:" + brfSug.getSport();
-        sugs[5] = "旅游指数:" + brfSug.getTrav();
-        sugs[6] = "紫外线指数:" + brfSug.getUv();
-
-
-        for(int i=0;i<SUG_NUM;i++){
-            mDataLists.get(i).put("text", sugs[i]);
-        }
-    }
 
     private void  initSwipeRefreshLayout() {
         mSwipeRefreshLayout.setColorSchemeColors(Color.BLUE);
@@ -285,18 +308,32 @@ public class MainActivity extends AppCompatActivity {
                 //if(app == null) {
                   //  app = (MyApplication) getApplication();
                 //}
+                //刷新数据，并写入SharedPreference
                 initData();
 
-                updateSugInfo();
+                //更新view的显示
+                updateView();
 
                 SimpleAdapter sa = (SimpleAdapter) mSugGridView.getAdapter();
+                //更新GridView里的内容，mSugGridView.invalidateViews()也可以更新
                 sa.notifyDataSetChanged();
-                //mSugGridView.invalidateViews();上一句或者这一句都可以更新
+
+                //设置下滑刷新提示小圆圈 消失
                 mSwipeRefreshLayout.setRefreshing(false);
             }
         });
+
     }
 
+    private void updateView() {
+        updateSugGridView();
+        updateNowWeather();
+    }
+
+
+    /**
+     * 从api中获取天气数据，将JSON转换到相应信息类里，而且写入SharedPreference
+     */
     private void initData() {
         Parameters para = new Parameters();
 

@@ -5,10 +5,11 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@drawable/cover_default_img">
 
     <android.support.v7.widget.Toolbar
-        android:background="@color/zhihu_blue"
+        android:background="#0000"
         android:id="@+id/id_toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"></android.support.v7.widget.Toolbar>
@@ -17,8 +18,7 @@
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swipe_refresh_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@drawable/cover_default_img">
+        android:layout_height="match_parent">
 
         <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:tools="http://schemas.android.com/tools"
@@ -28,12 +28,16 @@
             android:scrollbars="none"
             tools:context=".MainActivity">
 
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center"
                 android:orientation="vertical"
                 tools:context="com.wf.myndkdemo.MainActivity" >
+
+
+                <include layout="@layout/now_weather" />
 
                 <com.chensen.widget.MyGridView
                     android:layout_width="match_parent"
