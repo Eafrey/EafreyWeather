@@ -17,6 +17,7 @@
         android:id="@+id/sug_txt"
         android:textSize="15sp"
         android:layout_marginLeft="5dp"
+        android:textColor="@color/white"
         android:layout_gravity="center_vertical"
         android:textStyle="bold"
         android:layout_width="wrap_content"

@@ -2,9 +2,12 @@ package com.chensen.eafreyweather;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.*;
@@ -15,6 +18,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
+import android.view.View;
 import android.widget.*;
 
 import com.baidu.apistore.sdk.ApiCallBack;
@@ -59,6 +63,17 @@ public class MainActivity extends AppCompatActivity {
     private TextView mTmpNow;
     private ImageView mNowWeaIcon;
     private TextView mTmpRange;
+
+    //toolbar上的城市名字
+    private TextView mToolbarCityText;
+
+    //总的linearlayout
+    private LinearLayout mSumLinearLayout;
+
+    //选择城市的按钮
+    private ImageButton mCtiyPick;
+
+
 
 
     @Override
@@ -230,6 +245,15 @@ public class MainActivity extends AppCompatActivity {
         mTmpRange = (TextView) findViewById(R.id.id_now_tmp_range);
         mNowWeaIcon = (ImageView) findViewById(R.id.id_icon_now_wea);
 
+        mToolbarCityText = (TextView) findViewById(R.id.id_toolbar_city);
+
+        mSumLinearLayout = (LinearLayout) findViewById(R.id.sum_layout);
+
+        mCtiyPick = (ImageButton) findViewById(R.id.icon_city_pick);
+
+
+
+
         initToolbar();
 
         initSwipeRefreshLayout();
@@ -241,35 +265,79 @@ public class MainActivity extends AppCompatActivity {
 
         updateNowWeather();
 
+        initCityPick();
+
     }
+
+    private void initCityPick() {
+        mCtiyPick.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, CityPickActivity.class);
+                MainActivity.this.startActivity(intent);
+            }
+        });
+    }
+
 
     private void updateNowWeather() {
         //获取并显示当前温度
-        String tmp = weatherPref.getString("tmp", "--") + "℃";
+        String tmp = weatherPref.getString("tmpnow", "--") + "℃";
         mTmpNow.setText(tmp);
 
-        //显示或更新当天天气情况的图标
+        //显示或更新当天天气情况的图标,并且更新背景图片
+        //后续应加入根据时间是白天或者晚上加载相应的图标和背景
+        //后续素材的寻找，当前天气素材不够完整
         String weaTxt = weatherPref.getString("txtnow", "--");
         switch (weaTxt) {
             case "多云":
-                mNowWeaIcon.setImageResource(R.drawable.a_28);
+                mNowWeaIcon.setImageResource(R.drawable.c_duoyun);
+                mSumLinearLayout.setBackgroundResource(R.drawable.bg_duoyun);
+                break;
+            case "阴":
+                mNowWeaIcon.setImageResource(R.drawable.c_yin);
+                mSumLinearLayout.setBackgroundResource(R.drawable.bg_wumai);
+                break;
+            case "晴":
+                mNowWeaIcon.setImageResource(R.drawable.c_qing);
+                mSumLinearLayout.setBackgroundResource(R.drawable.bg_qing);
+                break;
+            case "阵雨":
+                mNowWeaIcon.setImageResource(R.drawable.c_zhenyu);
+                mSumLinearLayout.setBackgroundResource(R.drawable.bg_yu);
+                break;
+            case "小雨":
+                mNowWeaIcon.setImageResource(R.drawable.c_xiaoyu);
+                mSumLinearLayout.setBackgroundResource(R.drawable.bg_yu);
                 break;
             default:
                 break;
         }
 
         //获取并显示当天天气情况和当天温度范围
-        String weaDatTxt = weatherPref.getString("txt_dday0", "--") + "转" + weatherPref.getString("txt_nday0", "--") + " ";
+        String dayTxt = weatherPref.getString("txt_dday0", "--");
+        String nigTxt = weatherPref.getString("txt_nday0", "--");
+
         String tmpRange = weatherPref.getString("minday0", "--") + "~" + weatherPref.getString("maxday0", "--") + "℃";
-        String txt = weaDatTxt + tmpRange;
+
+        String txt = new String();
+        if(dayTxt.equals(nigTxt)) {
+            txt = dayTxt + " " + tmpRange;
+        } else {
+            txt = dayTxt + "转" + nigTxt + " " + tmpRange;
+        }
         mTmpRange.setText(txt);
+
+        //更新背景图片
+
     }
 
     private void initToolbar() {
-        mToolbar.setLogo(R.drawable.icon);
         String city = weatherPref.getString("city", "city");
-        mToolbar.setTitle(city);
-        setSupportActionBar(mToolbar);
+        mToolbarCityText.setText(city);
+
+        //mToolbar.setNavigationIcon(R.drawable.icon);
+        //setSupportActionBar(mToolbar);
     }
 
     private void updateSugGridView() {
@@ -326,10 +394,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void updateView() {
+
+
         updateSugGridView();
         updateNowWeather();
     }
-
 
     /**
      * 从api中获取天气数据，将JSON转换到相应信息类里，而且写入SharedPreference
