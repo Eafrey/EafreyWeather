@@ -4,12 +4,12 @@ import android.app.Activity;
 import android.os.Bundle;
 
 /**
- * Created by 陈森 on 2016/6/8.
+ * Created by chensen on 2016/6/8.
  */
-public class CityPickActivity extends Activity{
+public class SettingActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        setContentView(R.layout.city_pick);
+        setContentView(R.layout.settings);
         super.onCreate(savedInstanceState);
     }
 }

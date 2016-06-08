@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
 
     //GridView，里面包括各种建议
     private MyGridView mSugGridView;
-    private String[] sugs;
+    private String[] sugs = new String[7];
     private int[] icons;
     List<Map<String, Object>> mDataLists;
     private final static int SUG_NUM = 7;
@@ -70,9 +70,12 @@ public class MainActivity extends AppCompatActivity {
     //总的linearlayout
     private LinearLayout mSumLinearLayout;
 
-    //选择城市的按钮
+    //选择城市的按钮和设置按钮
     private ImageButton mCtiyPick;
+    private ImageButton mSetting;
 
+    //aqi数据
+    private TextView aqiBrfInfo;
 
 
 
@@ -81,13 +84,15 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        refreshData();
+
         initUI();
     }
 
     /**
      * 更新天气信息到SharedPreference
      */
-    private void updateWeaData() {
+    private void updateStoreWeaData() {
         SharedPreferences preferences = getSharedPreferences("weather_info", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
 
@@ -250,7 +255,9 @@ public class MainActivity extends AppCompatActivity {
         mSumLinearLayout = (LinearLayout) findViewById(R.id.sum_layout);
 
         mCtiyPick = (ImageButton) findViewById(R.id.icon_city_pick);
+        mSetting = (ImageButton) findViewById(R.id.ic_toolbar_setting);
 
+        aqiBrfInfo = (TextView) findViewById(R.id.aqi_info);
 
 
 
@@ -258,15 +265,30 @@ public class MainActivity extends AppCompatActivity {
 
         initSwipeRefreshLayout();
 
-        updateSugGridView();
+        refreshView();
+
         String [] from ={"image", "text"};
         int [] to = {R.id.icon_sug_index, R.id.sug_txt};
         mSugGridView.setAdapter(new SimpleAdapter(this, mDataLists, R.layout.sug_item, from, to));
 
-        updateNowWeather();
-
         initCityPick();
+        initSetting();
 
+    }
+
+    private void refreshAqiBrfData() {
+        String s = weatherPref.getString("qlty","qlty") + ":" + weatherPref.getString("aqi", "aqi");
+        aqiBrfInfo.setText(s);
+    }
+
+    private void initSetting() {
+        mSetting.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, SettingActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     private void initCityPick() {
@@ -274,13 +296,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, CityPickActivity.class);
-                MainActivity.this.startActivity(intent);
+                startActivity(intent);
             }
         });
     }
 
 
-    private void updateNowWeather() {
+    private void refreshNowWeather() {
         //获取并显示当前温度
         String tmp = weatherPref.getString("tmpnow", "--") + "℃";
         mTmpNow.setText(tmp);
@@ -340,9 +362,8 @@ public class MainActivity extends AppCompatActivity {
         //setSupportActionBar(mToolbar);
     }
 
-    private void updateSugGridView() {
+    private void refreshSugGridView() {
 
-        sugs = new String[7];
 
         sugs[0] =  "舒适度:" + weatherPref.getString("comfbrf", null);
         sugs[1] = "洗车指数:" + weatherPref.getString("cwbrf", null);
@@ -373,18 +394,9 @@ public class MainActivity extends AppCompatActivity {
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                //if(app == null) {
-                  //  app = (MyApplication) getApplication();
-                //}
-                //刷新数据，并写入SharedPreference
-                initData();
 
-                //更新view的显示
-                updateView();
+                refreshAll();
 
-                SimpleAdapter sa = (SimpleAdapter) mSugGridView.getAdapter();
-                //更新GridView里的内容，mSugGridView.invalidateViews()也可以更新
-                sa.notifyDataSetChanged();
 
                 //设置下滑刷新提示小圆圈 消失
                 mSwipeRefreshLayout.setRefreshing(false);
@@ -393,17 +405,34 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void updateView() {
+    private void refreshAll() {
+        //if(app == null) {
+        //  app = (MyApplication) getApplication();
+        //}
+        //刷新数据，并写入SharedPreference
+        refreshData();
 
+        //更新view的显示
+        refreshView();
 
-        updateSugGridView();
-        updateNowWeather();
+        SimpleAdapter sa = (SimpleAdapter) mSugGridView.getAdapter();
+        //更新GridView里的内容，mSugGridView.invalidateViews()也可以更新
+        sa.notifyDataSetChanged();
+    }
+
+    private void refreshView() {
+
+        refreshAqiBrfData();
+
+        refreshNowWeather();
+
+        refreshSugGridView();
     }
 
     /**
      * 从api中获取天气数据，将JSON转换到相应信息类里，而且写入SharedPreference
      */
-    private void initData() {
+    private void refreshData() {
         Parameters para = new Parameters();
 
         para.put("city", "xian");
@@ -420,7 +449,7 @@ public class MainActivity extends AppCompatActivity {
 
                         String s = new String(testToView(app));
                         mTextView.setText(s);
-                        updateWeaData();
+                        updateStoreWeaData();
                         //mTextView.setText(responseString);
                     }
 
