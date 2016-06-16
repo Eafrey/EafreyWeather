@@ -238,12 +238,14 @@ public class MainActivity extends AppCompatActivity {
             app = (MyApplication) getApplication();
         }
 
+        weatherPref = getSharedPreferences("weather_info", Context.MODE_PRIVATE);
+
         mTextView = (TextView) findViewById(R.id.mTextView);
 
         mToolbar = (Toolbar) findViewById(R.id.id_toolbar);
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
         mSugGridView = (MyGridView) findViewById(R.id.sug_grid_view);
-        weatherPref = getSharedPreferences("weather_info", Context.MODE_PRIVATE);
+
 
 
         mTmpNow = (TextView) findViewById(R.id.id_tmp_now);
@@ -258,10 +260,6 @@ public class MainActivity extends AppCompatActivity {
         mSetting = (ImageButton) findViewById(R.id.ic_toolbar_setting);
 
         aqiBrfInfo = (TextView) findViewById(R.id.aqi_info);
-
-
-
-        initToolbar();
 
         initSwipeRefreshLayout();
 
@@ -354,7 +352,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void initToolbar() {
+    private void refreshToolbar() {
         String city = weatherPref.getString("city", "city");
         mToolbarCityText.setText(city);
 
@@ -421,6 +419,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void refreshView() {
+        refreshToolbar();
 
         refreshAqiBrfData();
 

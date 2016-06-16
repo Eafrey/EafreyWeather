@@ -105,38 +105,6 @@ public class MyApplication extends Application {
         //初始化部分
         ApiStoreSDK.init(this, "55d00e1b496a6ea15e3fe4edaf42b392");
 
-        initData();
-
         super.onCreate();
-    }
-
-    private void initData() {
-        Parameters para = new Parameters();
-        para.put("city", "xian");
-        ApiStoreSDK.execute("http://apis.baidu.com/heweather/weather/free",
-                ApiStoreSDK.GET,
-                para,
-                new ApiCallBack() {
-
-                    @Override
-                    public void onSuccess(int status, String responseString) {
-                        Log.i("loadData", "onSuccess");
-
-                        JSON2Java.JSON2Java(MainActivity.app, responseString);
-                    }
-
-                    @Override
-                    public void onComplete() {
-                        Log.i("loadData", "onComplete");
-                    }
-
-                    @Override
-                    public void onError(int status, String responseString, Exception e) {
-                        Log.i("loadData", "onError, status: " + status);
-                        Log.i("loadData", "errMsg: " + (e == null ? "" : e.getMessage()));
-                    }
-
-                });
-
     }
 }
