@@ -1,32 +1,10 @@
-package com.chensen.Application;
-
-import android.app.Application;
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.util.Log;
-
-import com.baidu.apistore.sdk.ApiCallBack;
-import com.baidu.apistore.sdk.ApiStoreSDK;
-import com.baidu.apistore.sdk.network.Parameters;
-import com.chensen.eafreyweather.MainActivity;
-import com.chensen.information.AQIData;
-import com.chensen.information.AlarmInfo;
-import com.chensen.information.BasicInfo;
-import com.chensen.information.Suggestion;
-import com.chensen.information.DailyForecastInfo;
-import com.chensen.information.HourlyForecastInfo;
-import com.chensen.information.NowWeathInfo;
-import com.chensen.util.JSON2Java;
-
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+package com.chensen.information;
 
 /**
- * Created by 陈森 on 2016/5/31.
+ * Created by chensen on 2016/6/16.
  */
-public class MyApplication extends Application {
+public class SumInformation {
 
-    /*
     //status状态暂时还没加入
     private BasicInfo basicInfo = new BasicInfo();
     private AQIData aqiData = new AQIData();
@@ -99,13 +77,6 @@ public class MyApplication extends Application {
 
     public void setDetailedSuggestion(Suggestion detailedSuggestion) {
         this.detailedSuggestion = detailedSuggestion;
-    }*/
-
-    @Override
-    public void onCreate() {
-        //初始化部分
-        ApiStoreSDK.init(this, "55d00e1b496a6ea15e3fe4edaf42b392");
-
-        super.onCreate();
     }
+
 }

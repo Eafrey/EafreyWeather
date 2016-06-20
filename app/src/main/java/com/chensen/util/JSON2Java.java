@@ -8,6 +8,7 @@ import com.chensen.information.Suggestion;
 import com.chensen.information.DailyForecastInfo;
 import com.chensen.information.HourlyForecastInfo;
 import com.chensen.information.NowWeathInfo;
+import com.chensen.information.SumInformation;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -20,7 +21,7 @@ import java.lang.reflect.Method;
  */
 public class JSON2Java {
 
-    public static void JSON2Java(MyApplication app,String JSONString) {
+    public static void JSON2Java(SumInformation info, String JSONString) {
         //System.out.println(JSON);
 
         //获取中括号数组内的JSONObject
@@ -30,22 +31,22 @@ public class JSON2Java {
         JSONObject weaJO = jArr.getJSONObject(0);
 
         //解析基本信息到basicInfo
-        parseBasicInformation(app, weaJO);
+        parseBasicInformation(info, weaJO);
 
-        parseAQIData(app, weaJO);
+        parseAQIData(info, weaJO);
 
-        parseAlarmInfo(app, weaJO);
+        parseAlarmInfo(info, weaJO);
 
-        parseNowWeathInfo(app, weaJO);
+        parseNowWeathInfo(info, weaJO);
         
-        parseForecast7Day(app, weaJO);
+        parseForecast7Day(info, weaJO);
         
-        parseForecastHour(app, weaJO);
+        parseForecastHour(info, weaJO);
 
-        parseSuggestion(app, weaJO);
+        parseSuggestion(info, weaJO);
     }
 
-    private static void parseSuggestion(MyApplication app, JSONObject weaJO) {
+    private static void parseSuggestion(SumInformation info, JSONObject weaJO) {
         JSONObject sugJO = weaJO.getJSONObject("suggestion");
 
         Suggestion detailed = new Suggestion();
@@ -75,11 +76,11 @@ public class JSON2Java {
             }
         }
 
-        app.setBrfSuggestion(brf);
-        app.setDetailedSuggestion(detailed);
+        info.setBrfSuggestion(brf);
+        info.setDetailedSuggestion(detailed);
     }
 
-    private static void parseForecastHour(MyApplication app, JSONObject weaJO) {
+    private static void parseForecastHour(SumInformation info, JSONObject weaJO) {
         JSONArray foreacastArr = weaJO.getJSONArray("hourly_forecast");
         HourlyForecastInfo[] forecastHour = new HourlyForecastInfo[8];
 
@@ -122,11 +123,11 @@ public class JSON2Java {
 
         }
 
-        app.setForecastHour(forecastHour);
+        info.setForecastHour(forecastHour);
     }
 
 
-    private static void parseForecast7Day(MyApplication app, JSONObject weaJO) {
+    private static void parseForecast7Day(SumInformation info, JSONObject weaJO) {
         JSONArray foreacastArr = weaJO.getJSONArray("daily_forecast");
         DailyForecastInfo[] forecast7Day = new DailyForecastInfo[7];
 
@@ -183,10 +184,10 @@ public class JSON2Java {
 
         }
 
-        app.setForecast7Day(forecast7Day);
+        info.setForecast7Day(forecast7Day);
     }
 
-    private static void parseNowWeathInfo(MyApplication app, JSONObject weaJO) {
+    private static void parseNowWeathInfo(SumInformation info, JSONObject weaJO) {
         JSONObject nowJO = weaJO.getJSONObject("now");
 
         NowWeathInfo nowInfo = new NowWeathInfo();
@@ -223,11 +224,11 @@ public class JSON2Java {
         nowInfo.setSc(wind.getString("sc"));
         nowInfo.setSpd(wind.getString("spd"));
 
-        app.setNowWeathInfo(nowInfo);
+        info.setNowWeathInfo(nowInfo);
     }
 
     //预警还没有测试，因为不是每天都有预警信息
-    private static void parseAlarmInfo(MyApplication app, JSONObject weaJO) {
+    private static void parseAlarmInfo(SumInformation info, JSONObject weaJO) {
         if(weaJO.containsKey("alarms")) {
             JSONArray arr = weaJO.getJSONArray("alarms");
             JSONObject alarmJO = arr.getJSONObject(0);
@@ -257,11 +258,11 @@ public class JSON2Java {
                 }
             }
 
-            app.setAlarmInfo(alarmInfo);
+            info.setAlarmInfo(alarmInfo);
         }
     }
 
-    private static void parseAQIData(MyApplication app, JSONObject weaJO) {
+    private static void parseAQIData(SumInformation info, JSONObject weaJO) {
         JSONObject cityAQIJO = weaJO.getJSONObject("aqi").getJSONObject("city");
 
         AQIData aqiData = new AQIData();
@@ -289,10 +290,10 @@ public class JSON2Java {
             }
         }
 
-        app.setAqiData(aqiData);
+        info.setAqiData(aqiData);
     }
 
-    private static void parseBasicInformation(MyApplication app, JSONObject weaJO) {
+    private static void parseBasicInformation(SumInformation info, JSONObject weaJO) {
         JSONObject basJO = weaJO.getJSONObject("basic");
 
         BasicInfo basInfo = new BasicInfo();
@@ -327,7 +328,7 @@ public class JSON2Java {
         basInfo.setLoc(basJO.getJSONObject("update").getString("loc"));
         basInfo.setUtc(basJO.getJSONObject("update").getString("utc"));
 
-        app.setBasicInfo(basInfo);
+        info.setBasicInfo(basInfo);
     }
 }
 

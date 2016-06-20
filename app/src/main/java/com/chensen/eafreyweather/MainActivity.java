@@ -28,6 +28,7 @@ import com.chensen.Application.MyApplication;
 import com.chensen.information.DailyForecastInfo;
 import com.chensen.information.HourlyForecastInfo;
 import com.chensen.information.Suggestion;
+import com.chensen.information.SumInformation;
 import com.chensen.util.JSON2Java;
 import com.chensen.widget.MyGridView;
 
@@ -38,8 +39,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class MainActivity extends AppCompatActivity {
-    public static MyApplication app;
+public class MainActivity extends BaseActivity {
+    //public static MyApplication app;
 
     //仅作测试用的一个文本
     private TextView mTextView;
@@ -55,6 +56,9 @@ public class MainActivity extends AppCompatActivity {
     private final static int SUG_NUM = 7;
 
     private android.support.v7.widget.Toolbar mToolbar;
+
+    //存储天气信息的总类
+    public SumInformation info = new SumInformation();
 
     //用于存储天气信息
     private SharedPreferences weatherPref;
@@ -96,11 +100,11 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences preferences = getSharedPreferences("weather_info", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
 
-        Method[] methods1 = app.getBasicInfo().getClass().getDeclaredMethods();
+        Method[] methods1 = info.getBasicInfo().getClass().getDeclaredMethods();
         for(Method method : methods1) {
             if(method.getName().startsWith("get")) {
                 try {
-                    String s = (String) method.invoke(app.getBasicInfo());
+                    String s = (String) method.invoke(info.getBasicInfo());
                     String key = method.getName().substring(3, method.getName().length()).toLowerCase();
 
                     editor.putString(key, s);
@@ -112,11 +116,11 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-        Method[] methods2 = app.getAqiData().getClass().getDeclaredMethods();
+        Method[] methods2 = info.getAqiData().getClass().getDeclaredMethods();
         for(Method method : methods2) {
             if(method.getName().startsWith("get")) {
                 try {
-                    String s = (String) method.invoke(app.getAqiData());
+                    String s = (String) method.invoke(info.getAqiData());
                     String key = method.getName().substring(3, method.getName().length()).toLowerCase();
 
                     editor.putString(key, s);
@@ -128,11 +132,11 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-        Method[] methods3 = app.getAlarmInfo().getClass().getDeclaredMethods();
+        Method[] methods3 = info.getAlarmInfo().getClass().getDeclaredMethods();
         for(Method method : methods3) {
             if(method.getName().startsWith("get")) {
                 try {
-                    String s = (String) method.invoke(app.getAlarmInfo());
+                    String s = (String) method.invoke(info.getAlarmInfo());
                     String key = method.getName().substring(3, method.getName().length()).toLowerCase();
 
                     editor.putString(key, s);
@@ -144,11 +148,11 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-        Method[] methods4 = app.getNowWeathInfo().getClass().getDeclaredMethods();
+        Method[] methods4 = info.getNowWeathInfo().getClass().getDeclaredMethods();
         for(Method method : methods4) {
             if(method.getName().startsWith("get")) {
                 try {
-                    String s = (String) method.invoke(app.getNowWeathInfo());
+                    String s = (String) method.invoke(info.getNowWeathInfo());
                     String key = method.getName().substring(3, method.getName().length()).toLowerCase() + "now";
 
                     editor.putString(key, s);
@@ -160,13 +164,13 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-        DailyForecastInfo[] forecast7Day = app.getForecast7Day();
+        DailyForecastInfo[] forecast7Day = info.getForecast7Day();
         for(int i=0; i<forecast7Day.length && forecast7Day[i] != null; i++) {
             Method[] methods = forecast7Day[i].getClass().getDeclaredMethods();
             for(Method method : methods) {
                 if(method.getName().startsWith("get")) {
                     try {
-                        String s = (String) method.invoke(app.getForecast7Day()[i]);
+                        String s = (String) method.invoke(info.getForecast7Day()[i]);
                         String key = method.getName().substring(3, method.getName().length()).toLowerCase() + "day" + i;
 
                         editor.putString(key, s);
@@ -178,13 +182,13 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }
-        HourlyForecastInfo[] forecastHour = app.getForecastHour();
+        HourlyForecastInfo[] forecastHour = info.getForecastHour();
         for(int i=0; i<forecastHour.length && forecastHour[i] != null; i++) {
             Method[] methods = forecastHour[i].getClass().getDeclaredMethods();
             for(Method method : methods) {
                 if(method.getName().startsWith("get")) {
                     try {
-                        String s = (String) method.invoke(app.getForecastHour()[i]);
+                        String s = (String) method.invoke(info.getForecastHour()[i]);
                         String key = method.getName().substring(3, method.getName().length()).toLowerCase() + "hour" + i;
 
                         editor.putString(key, s);
@@ -197,11 +201,11 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-        Method[] methods5 = app.getBrfSuggestion().getClass().getDeclaredMethods();
+        Method[] methods5 = info.getBrfSuggestion().getClass().getDeclaredMethods();
         for(Method method : methods5) {
             if(method.getName().startsWith("get")) {
                 try {
-                    String s = (String) method.invoke(app.getBrfSuggestion());
+                    String s = (String) method.invoke(info.getBrfSuggestion());
                     String key = method.getName().substring(3, method.getName().length()).toLowerCase() + "brf";
 
                     editor.putString(key, s);
@@ -213,11 +217,11 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-        Method[] methods6 = app.getDetailedSuggestion().getClass().getDeclaredMethods();
+        Method[] methods6 = info.getDetailedSuggestion().getClass().getDeclaredMethods();
         for(Method method : methods6) {
             if(method.getName().startsWith("get")) {
                 try {
-                    String s = (String) method.invoke(app.getDetailedSuggestion());
+                    String s = (String) method.invoke(info.getDetailedSuggestion());
                     String key = method.getName().substring(3, method.getName().length()).toLowerCase() + "det";
 
                     editor.putString(key, s);
@@ -234,9 +238,9 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void initUI() {
-        if(app == null) {
+        /*if(app == null) {
             app = (MyApplication) getApplication();
-        }
+        }*/
 
         weatherPref = getSharedPreferences("weather_info", Context.MODE_PRIVATE);
 
@@ -261,9 +265,12 @@ public class MainActivity extends AppCompatActivity {
 
         aqiBrfInfo = (TextView) findViewById(R.id.aqi_info);
 
+
         initSwipeRefreshLayout();
 
         refreshView();
+
+        setSupportActionBar(mToolbar);
 
         String [] from ={"image", "text"};
         int [] to = {R.id.icon_sug_index, R.id.sug_txt};
@@ -444,15 +451,15 @@ public class MainActivity extends AppCompatActivity {
                     public void onSuccess(int status, String responseString) {
                         Log.i("loadData", "onSuccess");
 
-                        JSON2Java.JSON2Java(app, responseString);
+                        JSON2Java.JSON2Java(info, responseString);
 
-                        String s = new String(testToView(app));
+                        String s = new String(testToView(info));
                         mTextView.setText(s);
                         updateStoreWeaData();
                         //mTextView.setText(responseString);
                     }
 
-                    private StringBuffer testToView(MyApplication app) {
+                    private StringBuffer testToView(SumInformation app) {
                         StringBuffer sb = new StringBuffer();
 
                         Method[] methods1 = app.getBasicInfo().getClass().getDeclaredMethods();

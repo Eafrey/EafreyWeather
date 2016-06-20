@@ -16,6 +16,9 @@
         <item name="colorPrimaryDark">@color/zhihu_blue</item>
         <item name="colorAccent">@color/material_green_A200</item>
 
+        <!-- 为true时,view会根据系统栏自动设置Padding值来适配，即为屏幕自动加入padding，使得所有内容都可以显示在主屏上，从而避免toolbar被状态栏所覆盖。-->
+        <item name="android:fitsSystemWindows">true</item>
+
     </style>
 
 </resources>
