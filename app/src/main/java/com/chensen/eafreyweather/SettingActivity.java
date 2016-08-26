@@ -1,6 +1,5 @@
 package com.chensen.eafreyweather;
 
-import android.app.Activity;
 import android.os.Bundle;
 
 /**
@@ -9,7 +8,7 @@ import android.os.Bundle;
 public class SettingActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        setContentView(R.layout.settings);
+        setContentView(R.layout.activity_settings_more);
         super.onCreate(savedInstanceState);
     }
 }

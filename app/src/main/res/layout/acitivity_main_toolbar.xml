@@ -20,8 +20,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="25sp"
-            android:textStyle="italic"
+            android:textSize="@dimen/toolbar_title"
             android:layout_centerInParent="true"
             android:id="@+id/id_toolbar_city"
             android:textColor="@color/white"/>

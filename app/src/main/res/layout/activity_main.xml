@@ -7,7 +7,9 @@
     android:layout_height="match_parent"
     android:background="@drawable/cover_default_img">
 
-    <include layout="@layout/toolbar"></include>
+    <include layout="@layout/acitivity_main_toolbar"></include>
+
+
 
 
     <include layout="@layout/swipe_refresh_layout"></include>

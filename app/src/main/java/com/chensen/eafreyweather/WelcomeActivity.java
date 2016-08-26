@@ -35,7 +35,7 @@ public class WelcomeActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.welcome_page_activity);
+        setContentView(R.layout.activity_welcome_page);
 
 
         /*Parameters para = new Parameters();

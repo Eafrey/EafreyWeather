@@ -81,6 +81,10 @@ public class MainActivity extends BaseActivity {
     //aqi数据
     private TextView aqiBrfInfo;
 
+    private final int CITY_PICK_REQUEST = 0;
+
+    //当前城市的列表项
+    private String[] selectedCity;
 
 
     @Override
@@ -281,6 +285,17 @@ public class MainActivity extends BaseActivity {
 
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(requestCode == CITY_PICK_REQUEST && resultCode == RESULT_OK) {
+            String city = data.getStringExtra("city");
+            //设置成当前城市
+
+            refreshAll();
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
     private void refreshAqiBrfData() {
         String s = weatherPref.getString("qlty","qlty") + ":" + weatherPref.getString("aqi", "aqi");
         aqiBrfInfo.setText(s);
@@ -301,7 +316,7 @@ public class MainActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, CityPickActivity.class);
-                startActivity(intent);
+                startActivityForResult(intent, CITY_PICK_REQUEST);
             }
         });
     }

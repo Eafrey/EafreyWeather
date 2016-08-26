@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/zhihu_blue">
+
+    <!--<android.support.v7.widget.Toolbar android:id="@+id/toolbar_city_pick"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    </android.support.v7.widget.Toolbar> -->
+
+    <android.support.v7.widget.SearchView
+        android:id="@+id/searchview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="12dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="12dp"
+        android:background="@drawable/bg_searchview"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:textColor="#757575"
+        app:iconifiedByDefault="false"
+        app:queryBackground="@null"
+        app:queryHint="请输入城市名"/>
+
+    <me.yokeyword.indexablelistview.IndexableStickyListView
+        android:id="@+id/indexListView"
+        app:indexListView_type_overlay="right"
+        app:indexListView_rightOverlayColor="@color/zhihu_blue"
+        android:layout_width="match_parent"
+        app:indexBar_selected_textColor="@color/zhihu_blue"
+        android:layout_height="match_parent"
+        android:background="@android:color/white"/>
+
+</LinearLayout>
