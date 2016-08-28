@@ -10,6 +10,7 @@
         android:layout_height="match_parent">
 
         <ImageButton
+            android:padding="15dp"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_centerVertical="true"
@@ -26,6 +27,7 @@
             android:textColor="@color/white"/>
 
         <ImageButton
+            android:padding="15dp"
             android:layout_width="26dp"
             android:layout_height="26dp"
             android:id="@+id/ic_toolbar_setting"

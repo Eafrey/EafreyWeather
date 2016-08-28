@@ -4,12 +4,13 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/zhihu_blue">
+    android:background="@color/colorPrimary">
 
-    <!--<android.support.v7.widget.Toolbar android:id="@+id/toolbar_city_pick"
+    <android.support.v7.widget.Toolbar android:id="@+id/toolbar_city_pick"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-    </android.support.v7.widget.Toolbar> -->
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary">
+    </android.support.v7.widget.Toolbar>
 
     <android.support.v7.widget.SearchView
         android:id="@+id/searchview"

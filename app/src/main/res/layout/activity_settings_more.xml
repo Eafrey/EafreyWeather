@@ -6,6 +6,11 @@
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar_setting_more"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"></android.support.v7.widget.Toolbar>
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"/>
 
+    <FrameLayout
+        android:id="@+id/content_frame"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 </LinearLayout>

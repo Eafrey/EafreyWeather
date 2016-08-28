@@ -20,7 +20,7 @@ import android.view.WindowManager;
 
 public abstract class BaseActivity extends AppCompatActivity {
     /** 是否状态栏透明 **/
-    private boolean isSetStatusBar = true;
+    private boolean isSetStatusBar = false;
     /** 是否允许全屏 **/
     private boolean mAllowFullScreen = false;
     /** 是否禁止旋转屏幕 **/
