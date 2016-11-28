@@ -1,51 +1,64 @@
 package com.chensen.information;
 
+import com.chensen.information.dailyforeacst.DailyForecastCond;
+import com.chensen.information.dailyforeacst.DailyForecastTmp;
+
+import java.io.Serializable;
+
 /**
  * Created by chensen on 2016/5/31.
  */
-public class DailyForecastInfo {
-    private String date;
-    //日出时间
-    private String sr;
-    //日落时间
-    private String ss;
+public class DailyForecastInfo implements Serializable {
+    public String date;
 
-    //白天天气代码与描述
-    private String code_d;
-    private String code_n;
-    //夜晚天气代码与描述
-    private String txt_d;
-    private String txt_n;
+    public DailyForecastAstro astro;
+
+    public DailyForecastCond cond;
 
     //湿度（%）
-    private String hum;
+    public String hum;
     //降雨量（mm）
-    private String pcpn;
+    public String pcpn;
     //气压
-    private String pres;
-    //最高温度和最低温度
-    private String max;
-    private String min;
+    public String pres;
+
+    public DailyForecastTmp tmp;
+
     //能见度（km）
-    private String vis;
+    public String vis;
     //降水概率
-    private String pop;
+    public String pop;
 
-    //风向（角度）
-    private String deg;
-    //风向（方向）
-    private String dir;
-    //风力等级
-    private String sc;
-    //风速kmph
-    private String spd;
+    public DailyForecastWind wind;
 
-    public String getSr() {
-        return sr;
+
+    public DailyForecastInfo() {
+        date = new String();
+        hum = new String();
+        pcpn = new String();
+        pres = new String();
+        vis = new String();
+        pop = new String();
+        astro = new DailyForecastAstro();
+        cond = new DailyForecastCond();
+        wind = new DailyForecastWind();
+        tmp = new DailyForecastTmp();
     }
 
-    public void setSr(String sr) {
-        this.sr = sr;
+    public DailyForecastAstro getAstro() {
+        return astro;
+    }
+
+    public void setAstro(DailyForecastAstro astro) {
+        this.astro = astro;
+    }
+
+    public DailyForecastCond getCond() {
+        return cond;
+    }
+
+    public void setCond(DailyForecastCond cond) {
+        this.cond = cond;
     }
 
     public String getDate() {
@@ -54,46 +67,6 @@ public class DailyForecastInfo {
 
     public void setDate(String date) {
         this.date = date;
-    }
-
-    public String getSs() {
-        return ss;
-    }
-
-    public void setSs(String ss) {
-        this.ss = ss;
-    }
-
-    public String getCode_d() {
-        return code_d;
-    }
-
-    public void setCode_d(String code_d) {
-        this.code_d = code_d;
-    }
-
-    public String getCode_n() {
-        return code_n;
-    }
-
-    public void setCode_n(String code_n) {
-        this.code_n = code_n;
-    }
-
-    public String getTxt_d() {
-        return txt_d;
-    }
-
-    public void setTxt_d(String txt_d) {
-        this.txt_d = txt_d;
-    }
-
-    public String getTxt_n() {
-        return txt_n;
-    }
-
-    public void setTxt_n(String txt_n) {
-        this.txt_n = txt_n;
     }
 
     public String getHum() {
@@ -112,6 +85,14 @@ public class DailyForecastInfo {
         this.pcpn = pcpn;
     }
 
+    public String getPop() {
+        return pop;
+    }
+
+    public void setPop(String pop) {
+        this.pop = pop;
+    }
+
     public String getPres() {
         return pres;
     }
@@ -120,20 +101,12 @@ public class DailyForecastInfo {
         this.pres = pres;
     }
 
-    public String getMax() {
-        return max;
+    public DailyForecastTmp getTmp() {
+        return tmp;
     }
 
-    public void setMax(String max) {
-        this.max = max;
-    }
-
-    public String getMin() {
-        return min;
-    }
-
-    public void setMin(String min) {
-        this.min = min;
+    public void setTmp(DailyForecastTmp tmp) {
+        this.tmp = tmp;
     }
 
     public String getVis() {
@@ -144,12 +117,30 @@ public class DailyForecastInfo {
         this.vis = vis;
     }
 
-    public String getPop() {
-        return pop;
+    public DailyForecastWind getWind() {
+        return wind;
     }
 
-    public void setPop(String pop) {
-        this.pop = pop;
+    public void setWind(DailyForecastWind wind) {
+        this.wind = wind;
+    }
+}
+
+class DailyForecastWind  implements Serializable{
+    //风向（角度）
+    public String deg;
+    //风向（方向）
+    public String dir;
+    //风力等级
+    public String sc;
+    //风速kmph
+    public String spd;
+
+    public DailyForecastWind() {
+        deg  = new String();
+        dir = new String();
+        sc = new String();
+        spd = new String();
     }
 
     public String getDeg() {
@@ -182,5 +173,35 @@ public class DailyForecastInfo {
 
     public void setSpd(String spd) {
         this.spd = spd;
+    }
+}
+
+
+
+class DailyForecastAstro  implements Serializable{
+    //日出时间
+    public String sr;
+    //日落时间
+    public String ss;
+
+    public DailyForecastAstro() {
+        sr  = new String();
+        ss = new String();
+    }
+
+    public String getSr() {
+        return sr;
+    }
+
+    public void setSr(String sr) {
+        this.sr = sr;
+    }
+
+    public String getSs() {
+        return ss;
+    }
+
+    public void setSs(String ss) {
+        this.ss = ss;
     }
 }

@@ -1,13 +1,13 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 23
-    buildToolsVersion "23.0.3"
+    compileSdkVersion 25
+    buildToolsVersion '25'
 
     defaultConfig {
         applicationId "chensen.com.eafreyweather"
         minSdkVersion 14
-        targetSdkVersion 23
+        targetSdkVersion 25
         versionCode 1
         versionName "1.0"
     }
@@ -22,22 +22,14 @@ android {
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
-    compile 'com.android.support:appcompat-v7:23.4.0'
-
     //获取数据的api
     compile files('libs/ApiStoreSDK1.0.4.jar')
-
     //解析JSON的libs
-    compile files('libs/commons-beanutils-1.7.0.jar')
-    compile files('libs/commons-collections-3.2.jar')
-    compile files('libs/commons-lang-2.4.jar')
-    compile files('libs/commons-logging-1.1.jar')
-    compile files('libs/ezmorph-1.0.4.jar')
-    compile files('libs/json-lib-2.2.3-jdk13.jar')
-
-    compile 'com.android.support:support-v4:23.4.0'
-
     //选择城市依赖库
+    compile files('libs/pinyin4j-2.5.0.jar')
     compile 'me.yokeyword:indexablestickylistview:0.6.1'
-
+    compile 'com.android.support:support-v4:25.0.0'
+    compile 'com.android.support:appcompat-v7:25.0.0'
+    compile 'com.android.support:design:25.0.0'
+    compile 'com.google.code.gson:gson:2.2.4'
 }

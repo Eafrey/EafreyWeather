@@ -1,77 +1,90 @@
 package com.chensen.information;
 
+import com.chensen.information.suggestion.*;
+import java.io.Serializable;
+
 /**
  * Created by chensen on 2016/5/31.
  */
-public class Suggestion {
+public class Suggestion implements Serializable {
     //舒适指数
-    private String comf;
+    public SugComf comf;
     //洗车指数
-    private String cw;
+    public SugCw cw;
     //穿衣指数
-    private String drsg;
+    public SugDrsg drsg;
     //感冒指数
-    private String flu;
+    public SugFlu flu;
     //运动指数
-    private String sport;
+    public SugSport sport;
     //旅游指数
-    private String trav;
+    public SugTrav trav;
     //紫外线指数
-    private String uv;
+    public SugUv uv;
 
-    public String getComf() {
+    public Suggestion() {
+        comf = new SugComf();
+        cw = new SugCw();
+        drsg = new SugDrsg();
+        flu = new SugFlu();
+        sport = new SugSport();
+        trav = new SugTrav();
+        uv = new SugUv();
+    }
+
+    public SugComf getComf() {
         return comf;
     }
 
-    public void setComf(String comf) {
+    public void setComf(SugComf comf) {
         this.comf = comf;
     }
 
-    public String getCw() {
+    public SugCw getCw() {
         return cw;
     }
 
-    public void setCw(String cw) {
+    public void setCw(SugCw cw) {
         this.cw = cw;
     }
 
-    public String getDrsg() {
+    public SugDrsg getDrsg() {
         return drsg;
     }
 
-    public void setDrsg(String drsg) {
+    public void setDrsg(SugDrsg drsg) {
         this.drsg = drsg;
     }
 
-    public String getFlu() {
+    public SugFlu getFlu() {
         return flu;
     }
 
-    public void setFlu(String flu) {
+    public void setFlu(SugFlu flu) {
         this.flu = flu;
     }
 
-    public String getSport() {
+    public SugSport getSport() {
         return sport;
     }
 
-    public void setSport(String sport) {
+    public void setSport(SugSport sport) {
         this.sport = sport;
     }
 
-    public String getTrav() {
+    public SugTrav getTrav() {
         return trav;
     }
 
-    public void setTrav(String trav) {
+    public void setTrav(SugTrav trav) {
         this.trav = trav;
     }
 
-    public String getUv() {
+    public SugUv getUv() {
         return uv;
     }
 
-    public void setUv(String uv) {
+    public void setUv(SugUv uv) {
         this.uv = uv;
     }
 }

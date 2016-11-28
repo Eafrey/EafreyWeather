@@ -1,50 +1,47 @@
 package com.chensen.information;
 
+import java.io.Serializable;
+
 /**
  * Created by chensen on 2016/5/31.
  */
-public class NowWeathInfo {
-    //天气代码
-    private String code;
-    //天气描述
-    private String txt;
+public class NowWeathInfo implements Serializable {
+
+    public NowWeaCond cond;
+
     //体感温度
-    private String fl;
+    public String fl;
     //湿度（%）
-    private String hum;
+    public String hum;
     //降雨量（mm）
-    private String pcpn;
+    public String pcpn;
 
     //气压
-    private String pres;
+    public String pres;
     //当前温度
-    private String tmp;
+    public String tmp;
     //能见度（km）
-    private String vis;
+    public String vis;
 
-    //风向（角度）
-    private String deg;
-    //风向（方向）
-    private String dir;
-    //风力等级
-    private String sc;
-    //风速kmph
-    private String spd;
+    public NowWeaWind wind;
 
-    public String getTxt() {
-        return txt;
+    public NowWeathInfo() {
+        fl = new String();
+        hum = new String();
+        pcpn = new String();
+        pres = new String();
+        tmp = new String();
+        vis = new String();
+        cond = new NowWeaCond();
+        wind = new NowWeaWind();
     }
 
-    public void setTxt(String txt) {
-        this.txt = txt;
+    public NowWeaCond getCond() {
+        return cond;
     }
 
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
+    public void setCond(NowWeaCond cond) {
+        this.cond = cond;
     }
 
     public String getFl() {
@@ -95,6 +92,60 @@ public class NowWeathInfo {
         this.vis = vis;
     }
 
+    public NowWeaWind getWind() {
+        return wind;
+    }
+
+    public void setWind(NowWeaWind wind) {
+        this.wind = wind;
+    }
+}
+
+class NowWeaCond  implements Serializable{
+    //天气代码
+    public String code;
+    //天气描述
+    public String txt;
+
+    public NowWeaCond() {
+        code = new String();
+        txt = new String();
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public String getTxt() {
+        return txt;
+    }
+
+    public void setTxt(String txt) {
+        this.txt = txt;
+    }
+}
+
+class NowWeaWind  implements Serializable{
+    //风向（角度）
+    public String deg;
+    //风向（方向）
+    public String dir;
+    //风力等级
+    public String sc;
+    //风速kmph
+    public String spd;
+
+    public NowWeaWind() {
+        deg = new String();
+        dir = new String();
+        sc = new String();
+        spd = new String();
+    }
+
     public String getDeg() {
         return deg;
     }
@@ -126,6 +177,4 @@ public class NowWeathInfo {
     public void setSpd(String spd) {
         this.spd = spd;
     }
-
-
 }

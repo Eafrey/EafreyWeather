@@ -1,22 +1,31 @@
 package com.chensen.information;
 
+import java.io.Serializable;
+
 /**
  * Created by 陈森 on 2016/5/31.
  */
-public class BasicInfo {
-    private String city;
+public class BasicInfo implements Serializable {
+    public String city;
     //国家
-    private String cnty;
+    public String cnty;
     //城市ID
-    private String id;
+    public String id;
     //纬度
-    private String lat;
+    public String lat;
     //经度
-    private String lon;
-    //数据更新的当地时间
-    private String loc;
-    //数据更新的utc时间
-    private String utc;
+    public String lon;
+
+    public BasicUpdateTime update;
+
+    public BasicInfo() {
+        city = new String();
+        cnty = new String();
+        id = new String();
+        lat = new String();
+        lon = new String();
+        update = new BasicUpdateTime();
+    }
 
     public String getCity() {
         return city;
@@ -56,6 +65,19 @@ public class BasicInfo {
 
     public void setLon(String lon) {
         this.lon = lon;
+    }
+
+}
+
+class BasicUpdateTime  implements Serializable{
+    //数据更新的当地时间
+    public String loc;
+    //数据更新的utc时间
+    public String utc;
+
+    public BasicUpdateTime() {
+        loc = new String();
+        utc = new String();
     }
 
     public String getLoc() {

@@ -1,19 +1,8 @@
 package com.chensen.eafreyweather;
 
 import android.content.Intent;
-import android.os.Build;
 import android.os.Handler;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
-import android.view.Window;
-import android.view.WindowManager;
-
-import com.baidu.apistore.sdk.ApiCallBack;
-import com.baidu.apistore.sdk.ApiStoreSDK;
-import com.baidu.apistore.sdk.network.Parameters;
-import com.chensen.information.SumInformation;
-import com.chensen.util.JSON2Java;
 
 
 public class WelcomeActivity extends BaseActivity {

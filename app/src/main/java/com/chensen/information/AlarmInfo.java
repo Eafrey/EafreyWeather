@@ -1,16 +1,27 @@
 package com.chensen.information;
 
+import java.io.Serializable;
+
 /**
  * Created by 陈森 on 2016/5/31.
  */
-public class AlarmInfo {
-    private String level;
+public class AlarmInfo implements Serializable{
+    public String level;
     //预警状态
-    private String stat;
-    private String title;
+    public String stat;
+    public String title;
     //预警描述
-    private String txt;
-    private String type;
+    public String txt;
+    public String type;
+
+    public AlarmInfo() {
+        level = new String();
+        stat = new String();
+        title = new String();
+        txt = new String();
+        type = new String();
+    }
+
     public String getLevel() {
         return level;
     }

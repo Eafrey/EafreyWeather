@@ -1,26 +1,31 @@
 package com.chensen.information;
 
+import java.io.Serializable;
+
 /**
  * Created by chensen on 2016/5/31.
  */
-public class HourlyForecastInfo {
-    private String date;
+public class HourlyForecastInfo implements Serializable {
+    public String date;
     //湿度（%）
-    private String hum;
+    public String hum;
     //降水概率
-    private String pop;
+    public String pop;
     //气压
-    private String pres;
+    public String pres;
     //温度
-    private String tmp;
-    //风向（角度）
-    private String deg;
-    //风向（方向）
-    private String dir;
-    //风力等级
-    private String sc;
-    //风速kmph
-    private String spd;
+    public String tmp;
+
+    public HourlyForecastWind wind;
+
+    public HourlyForecastInfo() {
+        date = new String();
+        hum = new String();
+        pop = new String();
+        pres = new String();
+        tmp = new String();
+        wind = new HourlyForecastWind();
+    }
 
     public String getDate() {
         return date;
@@ -60,6 +65,24 @@ public class HourlyForecastInfo {
 
     public void setTmp(String tmp) {
         this.tmp = tmp;
+    }
+}
+
+class HourlyForecastWind  implements Serializable{
+    //风向（角度）
+    public String deg;
+    //风向（方向）
+    public String dir;
+    //风力等级
+    public String sc;
+    //风速kmph
+    public String spd;
+
+    public HourlyForecastWind() {
+        deg = new String();
+        dir = new String();
+        sc = new String();
+        spd = new String();
     }
 
     public String getDeg() {

@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.SearchView;
@@ -19,6 +20,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 
 import me.yokeyword.indexablelistview.IndexEntity;
@@ -46,7 +48,6 @@ public class CityPickActivity extends BaseActivity {
 
     //当前已选城市数量，名称
     private int cityNum;
-    private ArrayList<String> mSelectedCities = new ArrayList<>();
 
 
     private ArrayList<CityEntity> citySelectedEntityList = new ArrayList<>();
@@ -89,17 +90,7 @@ public class CityPickActivity extends BaseActivity {
             initCities();
         }
 
-        //当前城市数据获取
         weatherPref = getSharedPreferences("weather_info", Context.MODE_PRIVATE);
-        String selectedCities = weatherPref.getString("selected_cities", null);
-        if(selectedCities != null) {
-            String[] mCityArray = selectedCities.split(" ");
-            for(String city : mCityArray) {
-                if(!city.equals("缺省值")) {
-                    mSelectedCities.add(city);
-                }
-            }
-        }
     }
 
      protected void initView() {
@@ -149,9 +140,10 @@ public class CityPickActivity extends BaseActivity {
     }
 
     private void bindData() {
-        // 当前城市列表
-        if(!mSelectedCities.isEmpty()) {
-            for(String city : mSelectedCities) {
+
+        /*// 当前城市列表
+        if(!CityManageAcitivity.mSelectedCities.isEmpty()) {
+            for(String city : CityManageAcitivity.mSelectedCities) {
                 CityEntity nowEntity = new CityEntity();
                 nowEntity.setName(city);
                 citySelectedEntityList.add(nowEntity);
@@ -163,7 +155,7 @@ public class CityPickActivity extends BaseActivity {
         }
         citySelectedHeader.setHeaderTitle("当前城市");
         citySelectedHeader.setIndex("城");
-        citySelectedHeader.setHeaderList(citySelectedEntityList);
+        citySelectedHeader.setHeaderList(citySelectedEntityList);*/
 
         // 添加定位城市Header
         final CityEntity gpsEntity = new CityEntity();
@@ -183,7 +175,7 @@ public class CityPickActivity extends BaseActivity {
         hotHeader.setHeaderList(hotIndexEntityList);
 
         // 绑定数据
-        mIndexableStickyListView.bindDatas(mCities, citySelectedHeader, gpsHeader, hotHeader);
+        mIndexableStickyListView.bindDatas(mCities, gpsHeader, hotHeader);
 
         // 模拟定位
         new Handler().postDelayed(new Runnable() {
@@ -203,16 +195,14 @@ public class CityPickActivity extends BaseActivity {
                 final String city = cityEntity.getName();
 
                 if(!city.equals("请选择城市")) {
-                    if(!mSelectedCities.contains(city)) {
+                    if(!MainActivity.mSelectedCities.contains(city)) {
                         //选中未在已选择列表里城市时所做出的响应
                         new AlertDialog.Builder(CityPickActivity.this).setTitle("城市选择").setMessage("添加" + city + "?").
                                 setPositiveButton("添加", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
-                                        //第一次添加城市时替换默认有的“请选择城市”选项
-                                        if(citySelectedEntityList.get(0).getName().equals("请选择城市")) {
-                                            citySelectedEntityList.get(0).setName(city);
-                                        }
+
+                                        MainActivity.mSelectedCities.add(city);
 
                                         //写入SharedPreference
                                         SharedPreferences.Editor editor = weatherPref.edit();
@@ -221,10 +211,14 @@ public class CityPickActivity extends BaseActivity {
                                         editor.commit();
 
                                         //跳转回主界面，并返回相应结果
-                                        Intent intent = new Intent();
-                                        intent.putExtra("city", cityEntity.getName());
-                                        setResult(RESULT_OK, intent);
-                                        finish();
+                                        MainActivity.fragmentList.add(MainPagerFragment.newInstance(city));
+
+                                        FragmentPagerAdapter fpa = (FragmentPagerAdapter) MainActivity.mViewPager.getAdapter();
+                                        fpa.notifyDataSetChanged();
+                                        //MainActivity.mViewPager.setCurrentItem(MainActivity.fragmentList.size() - 1);
+
+                                        Intent intent = new Intent(CityPickActivity.this, MainActivity.class);
+                                        startActivity(intent);
                                     }
                                 }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
                             @Override
@@ -234,57 +228,7 @@ public class CityPickActivity extends BaseActivity {
                         }).create().show();
                     } else {
                         //选中已经在已选择列表里城市时所做出的响应
-                        new AlertDialog.Builder(CityPickActivity.this).setTitle("城市选择").setMessage("删除" + city + "?").
-                                setPositiveButton("删除", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        //从已选择城市列表中移除该城市
-                                        mSelectedCities.remove(city);
-
-                                        StringBuffer sb = new StringBuffer();
-                                        if(!mSelectedCities.isEmpty()) {
-                                            for(String s : mSelectedCities) {
-                                                sb.append(s);
-                                                sb.append(' ');
-                                            }
-                                            sb.deleteCharAt(sb.length() - 1);
-                                        } else {
-                                          sb.append("缺省值");
-                                        }
-                                        String s = new String(sb);
-
-                                        //写入SharedPreference
-                                        SharedPreferences.Editor editor = weatherPref.edit();
-                                        editor.putString("selected_cities", s);
-                                        editor.commit();
-
-                                        //重新绑定当前已选顶城市列表的数据
-                                        citySelectedEntityList.clear();
-                                        if(!mSelectedCities.isEmpty()) {
-                                            for(String city : mSelectedCities) {
-                                                CityEntity nowEntity = new CityEntity();
-                                                nowEntity.setName(city);
-                                                citySelectedEntityList.add(nowEntity);
-                                            }
-                                        } else {
-                                            CityEntity nowEntity = new CityEntity();
-                                            nowEntity.setName("请选择城市");
-                                            citySelectedEntityList.add(nowEntity);
-                                        }
-                                        citySelectedHeader.setHeaderTitle("当前城市");
-                                        citySelectedHeader.setIndex("城");
-                                        citySelectedHeader.setHeaderList(citySelectedEntityList);
-                                        // 绑定数据
-                                        mIndexableStickyListView.bindDatas(mCities, citySelectedHeader, gpsHeader, hotHeader);
-                                        //更新数据
-                                        mAdapter.notifyDataSetChanged();
-                                    }
-                                }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            }
-                        }).create().show();
+                        new AlertDialog.Builder(CityPickActivity.this).setMessage("城市已在选择列表").create().show();
                     }
                 }
             }
